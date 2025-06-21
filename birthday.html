@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Countdown to Unlock - Pink Beluga Cat Theme</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background: url('https://images.unsplash.com/photo-1750517712977-5ece91be6d84?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            padding: 50px;
+        }
+
+        h1 {
+            color: #ff69b4;
+            font-size: 48px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px #222;
+        }
+
+        .countdown {
+            font-size: 64px;
+            color: #fff;
+            text-shadow: 2px 2px #000;
+            margin: 20px 0;
+            background: rgba(255, 192, 203, 0.3);
+            padding: 20px 40px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .unlock-link {
+            margin-top: 40px;
+            font-size: 28px;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        .unlock-link.visible {
+            opacity: 1;
+        }
+
+        a {
+            color: #ff69b4;
+            text-decoration: none;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(255, 105, 180, 0.4);
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        a:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Countdown to Unlock 🎀</h1>
+    <div class="countdown" id="countdown">Loading...</div>
+
+    <div class="unlock-link" id="unlock-link">
+        🎉 <a href="https://www.roblox.com/games/105701056455020/a-SURPRISE" target="_blank">Click here to proceed!</a>
+    </div>
+
+    <script>
+        function updateCountdown() {
+            const now = new Date();
+
+            // Convert current time to IST (UTC+5:30)
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const istNow = new Date(utc + (5.5 * 60 * 60 * 1000));
+
+            const target = new Date(istNow);
+            target.setHours(23, 30, 0, 0); // Target time: 11:30 PM IST
+
+            // If already past 11:30 PM, move target to next day
+            if (istNow > target) {
+                target.setDate(target.getDate() + 1);
+            }
+
+            const diff = target - istNow;
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            const countdownElement = document.getElementById('countdown');
+            const unlockLink = document.getElementById('unlock-link');
+
+            if (diff <= 0) {
+                // Save state in localStorage
+                localStorage.setItem('linkUnlocked', 'true');
+
+                countdownElement.style.display = 'none';
+                unlockLink.classList.add('visible');
+            } else {
+                countdownElement.textContent =
+                    `${hours.toString().padStart(2, '0')}:` +
+                    `${minutes.toString().padStart(2, '0')}:` +
+                    `${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        // Check if already unlocked
+        function checkUnlockState() {
+            const unlocked = localStorage.getItem('linkUnlocked');
+            const countdownElement = document.getElementById('countdown');
+            const unlockLink = document.getElementById('unlock-link');
+
+            if (unlocked === 'true') {
+                countdownElement.style.display = 'none';
+                unlockLink.classList.add('visible');
+            } else {
+                updateCountdown();
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+        checkUnlockState();
+    </script>
+
+</body>
+</html>
